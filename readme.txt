@@ -1,4 +1,4 @@
-Git is a distributed version control system.
-Git is free software.
-Git has a mutable index called stage.
-Git tracks changes.
+python爱好者
+
+天气等接口用的是 天行 的API，有些是免费的，选择性使用
+发送消息采用的方法是企业微信，要先注册企业微信，然后新建应用，具体方法百度搜
