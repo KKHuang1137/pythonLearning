@@ -90,13 +90,17 @@ class DailyTips(object):
         except AttributeError as a:
             return "情诗获取失败..."
 
-    def combine_text(self):
-        """合并文本"""
+     # 企业微信API信息太长，字符串超过230个就发不出去，取消消息合并
+    @staticmethod
+    def interval_text():
+
+        """
         nameList = ["亲爱的小宝贝儿", "小宝", "小宝儿", "宝贝儿", "亲爱的老婆", "亲爱的", "小宝贝儿", "老婆"]
         name = random.choice(nameList)
         # love_poem = self.love_poems()  # 企业微信API信息太长，字符串超过230个就发不出去，取消情诗
         love_poem = ""
         weather = self.weathers()
+        """
 
         now_day = datetime.now().strftime('%Y-%m-%d')  # 当前的天数
         start_day = "2021-10-06"
@@ -107,18 +111,18 @@ class DailyTips(object):
         time_array2 = time.strptime(now_day, "%Y-%m-%d")
         timestamp_day2 = int(time.mktime(time_array2))
         interval = (timestamp_day2 - timestamp_day1) // 60 // 60 // 24
-
         """
         (众里寻他千百度，那人却在灯火阑珊处。)
         (小宝儿)，该起床啦。(天气描述)
         （宝贝儿），今天是我们在一起的第(161)天，也是我们未来在一起很多很多天的一天。爱你哟，我的小宝贝儿，mua~
-        """
+        
         text_total = "{}\n{}，该起床啦。\n{}\n{}，今天是我们在一起的第{}天，" \
                      "也是我们未来在一起很多很多天的一天。爱你哟，我的小宝贝儿，mua~"
 
         text_total = text_total.format(love_poem, name, weather, name, interval)  # 格式化输出
         return text_total
-
+        """
+        return interval
 
 class SendInfo(object):
 
@@ -144,9 +148,29 @@ class SendInfo(object):
 
 def main():
     dailytips = DailyTips("宝安")
-    text = dailytips.combine_text()
-    sendInfo = SendInfo(text)
+    # 发送情诗
+    love_poem = dailytips.love_poems()
+    sendInfo = SendInfo(love_poem)
     sendInfo.sendByWechat()
+
+    # 发送该起床了
+    nameList = ["亲爱的小宝贝儿", "小宝", "小宝儿", "宝贝儿", "亲爱的老婆", "亲爱的", "小宝贝儿", "老婆"]
+    text_getUp = random.choice(nameList) + "，" + "该起床啦。"
+    sendInfo = SendInfo(text_getUp)
+    sendInfo.sendByWechat()
+
+    # 发送天气
+    weather = dailytips.weathers()
+    sendInfo = SendInfo(weather)
+    sendInfo.sendByWechat()
+
+    # 发送在一起的天数
+    interval_day = dailytips.interval_text()
+    interval_text = "{}，今天是我们在一起的第{}天，也是我们未来在一起很多很多天的一天。爱你哟，我的小宝贝儿，mua~"
+    interval_text = interval_text.format(random.choice(nameList), interval_day)
+    sendInfo = SendInfo(interval_text)
+    sendInfo.sendByWechat()
+
 
 
 
